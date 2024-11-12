@@ -1,25 +1,26 @@
 import { useState, useReducer } from 'react'
 import './App.css'
+import Todo from './Todo'
 
 const ACTIONS = {
   newToDo: "addToDo",
-  toggleToDo: "toggleToDo"
+  toggleToDo: "toggleToDo",
 
 }
 
 
 function reducer(todos, action) {
-  switch (ACTIONS.type) {
+  switch (action.type) {
     case ACTIONS.newToDo:
       return [...todos, newTodo(action.payload.name)]
     case ACTIONS.toggleToDo:
-  } 
+  }
 
   console.log(todos)
 
-function newToDo(name){
-  return { id: Date.now(), name: name, complete: false }
-}
+  function newToDo(name) {
+    return { id: Date.now(), name: name, complete: false }
+  }
 
 }
 
@@ -34,9 +35,12 @@ function App() {
   }
   return (
     <>
-      <form on onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <input type="text" value={name} onChange={e => setName(e.target.value)} />
       </form>
+      {todo.map(todo => {
+       return  <Todo key={todo.id} todo={todo} />
+})}
     </>
   )
 }
