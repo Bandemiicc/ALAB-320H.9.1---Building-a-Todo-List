@@ -5,6 +5,7 @@ import Todo from './Todo'
 export const ACTIONS = {
   newToDo: "addToDo",
   toggleToDo: "toggleToDo",
+  deleteTodo: "deleteTodo"
 
 }
 
@@ -12,15 +13,21 @@ export const ACTIONS = {
 function reducer(todos, action) {
   switch (action.type) {
     case ACTIONS.newToDo:
-      return [...todos, newTodo(action.payload.name)]
+      return [...todos, newToDo(action.payload.name)]
     case ACTIONS.toggleToDo:
-      return todo.map(todo => {
-        if (todo.id === action.payload.id){
-          return{...todo, complete: !todo.complete}
+      return todos.map(todo => {
+        if (todo.id === action.payload.id) {
+          return { ...todo, complete: !todo.complete }
         }
-        return todo
+        return todo;
       })
+    case ACTIONS.deleteTodo:
+      return todos.filter(todo => {
+        return todo.id !== action.payload.id || !todo.complete;
+      });
+    default: return todos;
   }
+
 
   console.log(todos)
 
@@ -30,8 +37,10 @@ function reducer(todos, action) {
 
 }
 
+
+
 function App() {
-  const [todo, dispatch] = useReducer(reducer, [])
+  const [todos, dispatch] = useReducer(reducer, [])
   const [name, setName] = useState('')
 
   function handleSubmit(e) {
@@ -41,12 +50,14 @@ function App() {
   }
   return (
     <>
+      <h1>To-Do List ⬆️</h1>
+
       <form onSubmit={handleSubmit}>
         <input type="text" value={name} onChange={e => setName(e.target.value)} />
       </form>
-      {todo.map(todo => {
-       return  <Todo key={todo.id} todo={todo} dispatch/>
-})}
+      {todos.map(todo => {
+        return <Todo key={todo.id} todo={todo} dispatch={dispatch} />
+      })}
     </>
   )
 }
